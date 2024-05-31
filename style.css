@@ -27,7 +27,7 @@ section {
     max-width: 400px;
     text-align: center;
     margin-top: 20px;
-    padding-right: 58px;
+    /* padding-right: 58px; */
 }
 
 .quiz_form {
