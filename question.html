@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Quiz App</title>
+</head>
+<body>
+    <section class="question">
+        <section>
+            <h1 id="candidate"></h1>
+        </section>
+        <section>
+            <div class="question-container" id="question-container">
+                <p id="question-text"></p>
+                <div id="options"></div>
+            </div>
+            <button id="next">Next</button>
+        </section>
+    </section>
+
+    <script>
+        // Array to store questions and options
+        const questions = [
+            {
+                text: "Question 1: What is the capital of France?",
+                options: ["A. Berlin", "B. Madrid", "C. Paris", "D. Rome"],
+                correct: "C"
+            },
+            {
+                text: "Question 2: Which planet is known as the Red Planet?",
+                options: ["A. Earth", "B. Mars", "C. Jupiter", "D. Saturn"],
+                correct: "B"
+            },
+            {
+                text: "Question 3: What is the largest ocean on Earth?",
+                options: ["A. Atlantic Ocean", "B. Indian Ocean", "C. Arctic Ocean", "D. Pacific Ocean"],
+                correct: "D"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        // Display candidate name
+        var candidate = document.getElementById("candidate");
+        var candidate_name = localStorage.getItem("candidate_name");
+        if (candidate_name) {
+            candidate.textContent = "Hi, " + candidate_name;
+        } else {
+            candidate.textContent = "No Name";
+        }
+
+        // Load question
+        function loadQuestion() {
+            const questionContainer = document.getElementById("question-container");
+            const questionText = document.getElementById("question-text");
+            const optionsContainer = document.getElementById("options");
+
+            // Clear previous options
+            optionsContainer.innerHTML = "";
+
+            const question = questions[currentQuestionIndex];
+            questionText.textContent = question.text;
+
+            // Load options
+            question.options.forEach((option, index) => {
+                const radio = document.createElement("input");
+                radio.type = "radio";
+                radio.name = "option";
+                radio.value = option.charAt(0);
+                radio.id = "option" + index;
+
+                const label = document.createElement("label");
+                label.htmlFor = "option" + index;
+                label.textContent = option;
+
+                optionsContainer.appendChild(radio);
+                optionsContainer.appendChild(label);
+                optionsContainer.appendChild(document.createElement("br"));
+            });
+        }
+
+        loadQuestion();
+
+        // Handle next button click
+        var nextButton = document.getElementById("next");
+        nextButton.addEventListener("click", function() {
+            const selectedOption = document.querySelector('input[name="option"]:checked');
+
+            if (selectedOption) {
+                const answer = selectedOption.value;
+                const question = questions[currentQuestionIndex];
+
+                if (answer === question.correct) {
+                    score++;
+                }
+
+                currentQuestionIndex++;
+
+                if (currentQuestionIndex < questions.length) {
+                    loadQuestion();
+                } else {
+                    localStorage.setItem("score", score);
+                    // alert("Quiz completed! Your score is: " + score);
+                    // Optionally, redirect to a results page
+                    window.location.href = "result.html";
+                }
+            } else {
+                alert("Please select an option.");
+            }
+        });
+    </script>
+</body>
+</html>
